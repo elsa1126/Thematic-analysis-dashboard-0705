@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交易數據分析儀表板</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 頁面標題 -->
+        <header class="dashboard-header">
+            <h1>交易數據分析儀表板</h1>
+            <p class="header-subtitle">最好不要給我出bug</p>
+        </header>
+
+        <!-- 導航選單 -->
+        <nav class="dashboard-nav">
+            <button class="nav-btn active" data-section="overview">總覽儀表板</button>
+            <button class="nav-btn" data-section="correlation-analysis">相關性分析</button>
+            <button class="nav-btn" data-section="ai-assistant">AI助手</button>
+            <button class="nav-btn" data-section="advanced-stats">進階統計</button>
+            <button class="nav-btn" data-section="interactive-charts">互動圖表</button>
+        </nav>
+        <!-- 比較方式選單與結果區塊 -->
+        
+  
+        <!-- 總覽儀表板 -->
+        <section id="overview" class="dashboard-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>數據連接狀態</h3>
+                    <div class="stat-value" id="connection-indicator">連接中...</div>
+                    <div class="stat-label">自動載入交易數據</div>
+                </div>
+                <div class="stat-card">
+                    <h3>總交易筆數</h3>
+                    <div class="stat-value" id="total-trades">0</div>
+                    <div class="stat-label">歷史記錄</div>
+                </div>
+                <div class="stat-card">
+                    <h3>當前餘額</h3>
+                    <div class="stat-value" id="current-balance">0</div>
+                    <div class="stat-label">USDT</div>
+                </div>
+                <div class="stat-card">
+                    <h3>平均決策分數</h3>
+                    <div class="stat-value" id="avg-decision-score">0</div>
+                    <div class="stat-label">綜合評分</div>
+                </div>
+            </div>
+
+            <div class="analysis-grid">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>最新交易記錄</h2>
+                        <button class="btn btn--secondary btn--sm" id="refresh-data">刷新數據</button>
+                    </div>
+                    <div class="card__body">
+                        <div class="table-container">
+                            <table class="data-table" id="recent-trades-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>時間</th>
+                                        <th>盈虧</th>
+                                        <th>盈虧%</th>
+                                        <th>決策分數</th>
+                                        <th>理性分數</th>
+                                        <th>情緒分數</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card__header">
+                        <h2>績效趨勢</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="chart-container">
+                            <canvas id="performance-trend-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相關性分析中心 -->
+        <section id="correlation-analysis" class="dashboard-section">
+            <div class="analysis-grid">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>相關性熱力圖</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="chart-container">
+                            <canvas id="correlation-heatmap"></canvas>
+                        </div>
+                        <div class="correlation-interpretation">
+                            <h4>相關性分析結果</h4>
+                            <div class="correlation-insights" id="correlation-insights"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__header">
+                        <h2>散點圖分析</h2>
+                        <div class="chart-controls">
+                            <select id="scatter-x-var" class="form-control">
+                                <option value="rationalScore">理性分數</option>
+                                <option value="emotionalScore">情緒分數</option>
+                                <option value="decisionScore">決策分數</option>
+                            </select>
+                            <select id="scatter-y-var" class="form-control">
+                                <option value="pnl">盈虧金額</option>
+                                <option value="pnlPercentage">盈虧百分比</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card__body">
+                        <div class="chart-container">
+                            <canvas id="scatter-chart"></canvas>
+                        </div>
+                        <div class="pearson-coefficient">
+                            <p>皮爾森相關係數: <span id="pearson-value">計算中...</span></p>
+                            <p class="correlation-strength" id="correlation-strength">分析中...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI對話助手區域 -->
+        <section id="ai-assistant" class="dashboard-section">
+            <div class="ai-chat-container">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>AI 交易分析助手</h2>
+                        <span class="status status--info" id="ai-status">準備就緒</span>
+                    </div>
+                    <div class="card__body">
+                        <div class="chat-history" id="chat-history">
+                            <div class="chat-message ai-message">
+                                <div class="message-content">
+                                    <p>您好！我是您的交易分析助手。我已經連接到您的交易數據，可以幫助您分析交易表現、解釋相關性結果，並提供個人化的交易建議。請選擇一個快速問題或輸入您的問題。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="preset-questions">
+                            <button class="btn btn--outline preset-btn">這個月我的決策分數和收益有關嗎？</button>
+                            <button class="btn btn--outline preset-btn">我情緒分數高時績效如何？</button>
+                            <button class="btn btn--outline preset-btn">最近哪種情緒最常出現在虧損交易？</button>
+                            <button class="btn btn--outline preset-btn">請分析我的理性分數與盈虧的關聯性</button>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chat-input" class="form-control" placeholder="輸入您的問題...">
+                            <button class="btn btn--primary" id="send-chat">發送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 進階統計分析 -->
+        <section id="advanced-stats" class="dashboard-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>勝率</h3>
+                    <div class="stat-value" id="win-rate">計算中...</div>
+                    <div class="stat-label">盈利交易比例</div>
+                </div>
+                <div class="stat-card">
+                    <h3>平均盈虧</h3>
+                    <div class="stat-value" id="avg-pnl">計算中...</div>
+                    <div class="stat-label">USDT</div>
+                </div>
+                <div class="stat-card">
+                    <h3>最大盈利</h3>
+                    <div class="stat-value" id="max-profit">計算中...</div>
+                    <div class="stat-label">單筆最佳</div>
+                </div>
+                <div class="stat-card">
+                    <h3>最大虧損</h3>
+                    <div class="stat-value" id="max-loss">計算中...</div>
+                    <div class="stat-label">單筆最差</div>
+                </div>
+            </div>
+            
+            <div class="comparison-analysis">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>心理狀態vs績效分析</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="comparison-grid">
+                            <div class="comparison-group">
+                                <h4>高決策分數組 (>70)</h4>
+                                <div class="group-stats" id="high-decision-stats">
+                                    <p>平均盈虧: <span class="loading">計算中...</span></p>
+                                    <p>勝率: <span class="loading">計算中...</span></p>
+                                    <p>交易次數: <span class="loading">計算中...</span></p>
+                                </div>
+                            </div>
+                            <div class="comparison-group">
+                                <h4>低決策分數組 (≤70)</h4>
+                                <div class="group-stats" id="low-decision-stats">
+                                    <p>平均盈虧: <span class="loading">計算中...</span></p>
+                                    <p>勝率: <span class="loading">計算中...</span></p>
+                                    <p>交易次數: <span class="loading">計算中...</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-16">
+                            <h4>情緒vs理性平衡分析</h4>
+                            <div class="chart-container">
+                                <canvas id="emotion-rational-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 互動式圖表區 -->
+        <section id="interactive-charts" class="dashboard-section">
+            <div class="card">
+                <div class="card__header">
+                    <h2>自定義圖表分析</h2>
+                    <div class="chart-controls">
+                        <select id="chart-type" class="form-control">
+                            <option value="line">線圖</option>
+                            <option value="bar">柱狀圖</option>
+                            <option value="scatter">散點圖</option>
+                        </select>
+                        <select id="x-variable" class="form-control">
+                            <option value="datetime">時間</option>
+                            <option value="decisionScore">決策分數</option>
+                            <option value="rationalScore">理性分數</option>
+                            <option value="emotionalScore">情緒分數</option>
+                        </select>
+                        <select id="y-variable" class="form-control">
+                            <option value="pnl">盈虧金額</option>
+                            <option value="pnlPercentage">盈虧百分比</option>
+                            <option value="balance">帳戶餘額</option>
+                        </select>
+                        <button class="btn btn--secondary" id="export-chart">匯出圖表</button>
+                    </div>
+                </div>
+                <div class="card__body">
+                    <div class="chart-container large">
+                        <canvas id="interactive-chart"></canvas>
+                    </div>
+                    <div class="mt-16">
+                        <h4>數據篩選</h4>
+                        <div class="chart-controls">
+                            <input type="date" id="date-from" class="form-control" placeholder="開始日期">
+                            <input type="date" id="date-to" class="form-control" placeholder="結束日期">
+                            <input type="number" id="min-decision-score" class="form-control" placeholder="最低決策分數" min="0" max="100">
+                            <button class="btn btn--primary" id="apply-filters">套用篩選</button>
+                            <button class="btn btn--outline" id="clear-filters">清除篩選</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+              
+        
+        
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
